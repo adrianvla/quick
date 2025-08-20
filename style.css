@@ -195,6 +195,7 @@ body.dark .pill{
     gap:10px;
     padding:20px;
     overflow:hidden;
+    height:100%;
 }
 .categories{
     display:flex;
@@ -347,18 +348,17 @@ body.dark .pill{
     background:var(--dark-blue);
 }
 
-input[type="text"], .input, select{
+input[type="text"], .input, select, input[type="time"]{
     background:var(--lighter-background);
     border:1px solid var(--lighter-background);
     padding:10px;
     border-radius:10px;
     color:#ccc;
     font-size:1em;
-    width:100%;
     box-sizing: border-box;
 }
 
-input[type="text"]:focus, select:focus, .input:focus{
+input[type="text"]:focus, select:focus, .input:focus, input[type="time"]:focus{
     outline:none;
     border:1px solid var(--dark-blue);
 }
@@ -420,4 +420,553 @@ input[type="text"]:focus, select:focus, .input:focus{
 }
 .entry .edit-task svg{
     transform:scale(0.7);
+}
+
+#drawflow {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: var(--background);
+    background-size: 25px 25px;
+    background-image: radial-gradient(var(--lighter-background) 1px, transparent 0);
+    border-radius:10px;
+    border:1px solid var(--grey);
+}
+
+
+/* Editing Drawflow */
+
+.drawflow .drawflow-node {
+    background: var(--background);
+    border: 1px solid var(--grey);
+    -webkit-box-shadow: 0 2px 15px 2px var(--black);
+    box-shadow: 0 2px 15px 2px var(--black);
+    padding: 0px;
+    width: max-content;
+    min-width:200px;
+    color:#ccc;
+}
+.drawflow .drawflow-node .drawflow_content_node{
+    padding-inline: 20px;
+}
+
+.drawflow .drawflow-node.selected  {
+    background: var(--lighter-background);
+    border: 1px solid var(--dim-blue);
+    -webkit-box-shadow: 0 2px 20px 2px #4ea9ff;
+    box-shadow: 0 2px 20px 2px #4ea9ff;
+}
+
+.drawflow .drawflow-node.selected .title-box {
+    color: #22598c;
+}
+
+.drawflow .connection .main-path {
+    stroke: var(--blue);
+    stroke-width: 3px;
+}
+
+.drawflow .drawflow-node .input, .drawflow .drawflow-node .output {
+    border: 1px solid var(--grey);
+    background:var(--background);
+    box-sizing: border-box;
+    width:24px;
+    height:24px;
+    top:0;
+    bottom:0;
+    margin: 0;
+    position: absolute;
+    transform:translateY(-50%);
+}
+.drawflow .drawflow-node .inputs,.drawflow .drawflow-node .outputs{
+    position:relative;
+}
+.drawflow .drawflow-node .input:hover, .drawflow .drawflow-node .output:hover {
+    background: var(--blue);
+}
+
+.drawflow .drawflow-node .output {
+    right: -12px;
+}
+
+.drawflow .drawflow-node .input {
+    left: -12px;
+}
+
+.drawflow-delete {
+    border: 2px solid var(--red);
+    background: var(--lighter-background);
+    color: var(--red);
+    -webkit-box-shadow: 0 2px 20px 2px var(--red);
+    box-shadow: 0 2px 20px 2px var(--red);
+}
+
+.drawflow .title-box svg {
+    position: initial;
+}
+.drawflow-node .box {
+    padding: 10px 20px 20px 20px;
+    font-size: 14px;
+    color: #555555;
+
+}
+.drawflow-node .box p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.drawflow-node input, .drawflow-node select, .drawflow-node textarea {
+    border-radius: 4px;
+    border: 1px solid var(--grey);
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    width: 158px;
+    color: #555555;
+}
+
+.drawflow-node textarea {
+    height: 100px;
+}
+
+
+.drawflow .connection .point {
+    stroke: var(--grey);
+    stroke-width: 2;
+    fill: white;
+
+}
+
+.drawflow .connection:hover .main-path{
+    stroke: var(--dim-blue);
+}
+.drawflow .connection .selected{
+    stroke: var(--green) !important;
+}
+
+.drawflow span.small-pill{
+    padding: 2px 5px 2px 15px;
+    border-radius: 1000px;
+    font-size: 0.5em;
+    position:relative;
+}
+.drawflow span.small-pill::after{
+    content:"";
+    position:absolute;
+    top:50%;
+    transform: translate(-50%,-50%);
+    left:8px;
+    width:7px;
+    height:7px;
+    background:rgba(0,0,0,0.5);
+    border-radius:1000px;
+}
+.drawflow .pert{
+    display:flex;
+    flex-direction: column;
+    width:100%;
+}
+.drawflow .task-content{
+    width:100%;
+    overflow: hidden;
+}
+.drawflow_content_node > div{
+    padding:5px;
+    gap:4px !important;
+}
+.drawflow .task-content .task-title{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+}
+
+
+
+.datepicker {
+    width: -moz-min-content;
+    width: min-content;
+}
+
+.datepicker:not(.active) {
+    display: none;
+}
+
+.datepicker-dropdown {
+    position: absolute;
+    z-index: 20;
+    padding-top: 4px;
+}
+
+.datepicker-dropdown.datepicker-orient-top {
+    padding-top: 0;
+    padding-bottom: 4px;
+}
+
+.datepicker-picker {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    background-color: var(--lighter-background);
+}
+
+.datepicker-dropdown .datepicker-picker {
+    box-shadow: 0 2px 3px var(--black), 0 0 0 1px var(--background);
+}
+
+.datepicker-main {
+    flex: auto;
+    padding: 2px;
+}
+
+.datepicker-footer {
+    box-shadow: inset 0 1px 1px var(--grey2);
+    background-color: var(--lighter-background);
+}
+
+.datepicker-title {
+    box-shadow: inset 0 -1px 1px var(--grey2);
+    background-color: var(--lighter-background);
+    padding: 0.375rem 0.75rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--blue);
+}
+
+.datepicker-controls {
+    display: flex;
+}
+
+.datepicker-header .datepicker-controls {
+    padding: 2px 2px 0;
+}
+
+.datepicker-controls .button {
+    display: inline-flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    border: 1px solid var(--grey);
+    border-radius: 4px;
+    box-shadow: none;
+    background-color: var(--lighter-background);
+    cursor: pointer;
+    padding: calc(0.375em - 1px) 0.75em;
+    height: 2.25em;
+    vertical-align: top;
+    text-align: center;
+    line-height: 1.5;
+    white-space: nowrap;
+    color: var(--blue);
+    font-size: 1rem;
+}
+
+.datepicker-controls .button:focus,
+.datepicker-controls .button:active {
+    outline: none;
+}
+
+.datepicker-controls .button:hover {
+    border-color: var(--blue);
+    color: var(--dim-blue);
+}
+
+.datepicker-controls .button:focus {
+    border-color: var(--dim-blue);
+    color: var(--dim-blue);
+}
+
+.datepicker-controls .button:focus:not(:active) {
+    box-shadow: 0 0 0 0.125em var(--blue-transparent);
+}
+
+.datepicker-controls .button:active {
+    border-color: var(--blue2);
+    color: var(--blue2);
+}
+
+.datepicker-controls .button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.datepicker-header .datepicker-controls .button {
+    border-color: transparent;
+    font-weight: bold;
+}
+
+.datepicker-header .datepicker-controls .button:hover {
+    background-color: var(--lighter-background-transparent);
+}
+
+.datepicker-header .datepicker-controls .button:active {
+    background-color: var(--background);
+}
+
+.datepicker-footer .datepicker-controls .button {
+    flex: auto;
+    margin: calc(0.375rem - 1px) 0.375rem;
+    border-radius: 2px;
+    font-size: 0.75rem;
+}
+
+.datepicker-controls .view-switch {
+    flex: auto;
+}
+
+.datepicker-controls .prev-button,
+.datepicker-controls .next-button {
+    padding-right: 0.375rem;
+    padding-left: 0.375rem;
+    flex: 0 0 14.2857142857%;
+}
+
+.datepicker-controls .prev-button.disabled,
+.datepicker-controls .next-button.disabled {
+    visibility: hidden;
+}
+
+.datepicker-view,
+.datepicker-grid {
+    display: flex;
+}
+
+.datepicker-view {
+    align-items: stretch;
+    width: 15.75rem;
+}
+
+.datepicker-grid {
+    flex-wrap: wrap;
+    flex: auto;
+}
+
+.datepicker .days {
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+}
+
+.datepicker .days-of-week {
+    display: flex;
+}
+
+.datepicker .week-numbers {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 9.6774193548%;
+}
+
+.datepicker .weeks {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex: auto;
+}
+
+.datepicker span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*border-radius: 4px;*/
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.datepicker .dow {
+    height: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--blue);
+}
+
+.datepicker .week {
+    flex: auto;
+    color: var(--grey);
+    font-size: 0.75rem;
+}
+
+.datepicker-cell,
+.datepicker .days .dow {
+    flex-basis: 14.2857142857%;
+}
+
+.datepicker-cell {
+    height: 2.25rem;
+    background: var(--lighter-background);
+    color: var(--blue);
+    box-sizing: border-box;
+    transition: background 0.1s, color 0.1s;
+    box-shadow: var(--background) 0px 0px 0px 1px;
+}
+
+.datepicker-cell:not(.day) {
+    flex-basis: 25%;
+    height: 4.5rem;
+}
+
+.datepicker-cell:not(.disabled):hover {
+    background-color: var(--blue-transparent);
+    color: var(--background);
+    cursor: pointer;
+}
+
+.datepicker-cell.focused:not(.selected) {
+    background-color: var(--blue2);
+    color: var(--background);
+}
+
+.datepicker-cell.selected,
+.datepicker-cell.selected:hover {
+    background-color: var(--blue);
+    color: #fff;
+    font-weight: 600;
+}
+
+.datepicker-cell.disabled {
+    color: var(--grey2);
+}
+
+.datepicker-cell.prev:not(.disabled),
+.datepicker-cell.next:not(.disabled) {
+    color: var(--grey);
+}
+
+.datepicker-cell.prev.selected,
+.datepicker-cell.next.selected {
+    color: var(--lighter-background);
+}
+
+.datepicker-cell.highlighted:not(.selected):not(.range):not(.today) {
+    border-radius: 0;
+    background-color: var(--lighter-background);
+}
+
+.datepicker-cell.highlighted:not(.selected):not(.range):not(.today):not(.disabled):hover {
+    background-color: var(--blue-transparent);
+}
+
+.datepicker-cell.highlighted:not(.selected):not(.range):not(.today).focused {
+    background-color: var(--blue2);
+}
+
+.datepicker-cell.today:not(.selected) {
+    background-color: var(--dim-green);
+}
+
+.datepicker-cell.today:not(.selected):not(.disabled) {
+    color: #fff;
+}
+
+.datepicker-cell.today.focused:not(.selected) {
+    background-color: var(--green2);
+}
+
+.datepicker-cell.range-end:not(.selected),
+.datepicker-cell.range-start:not(.selected) {
+    background-color: var(--blue2);
+    color: #fff;
+}
+
+.datepicker-cell.range-end.focused:not(.selected),
+.datepicker-cell.range-start.focused:not(.selected) {
+    background-color: var(--dim-blue);
+}
+
+.datepicker-cell.range-start:not(.range-end) {
+    border-radius: 4px 0 0 4px;
+}
+
+.datepicker-cell.range-end:not(.range-start) {
+    border-radius: 0 4px 4px 0;
+}
+
+.datepicker-cell.range {
+    border-radius: 0;
+    background-color: var(--blue-transparent);
+}
+
+.datepicker-cell.range:not(.disabled):not(.focused):not(.today):hover {
+    background-color: var(--dim-blue);
+}
+
+.datepicker-cell.range.disabled {
+    color: var(--grey2);
+}
+
+.datepicker-cell.range.focused {
+    background-color: var(--dim-blue);
+}
+
+.datepicker-input.in-edit {
+    border-color: var(--dim-blue);
+}
+
+.datepicker-input.in-edit:focus,
+.datepicker-input.in-edit:active {
+    box-shadow: 0 0 0.25em 0.25em var(--blue-transparent);
+}
+
+.page-title{
+    display:flex;
+    justify-content: space-between;
+}
+.page-title > div{
+    display:flex;
+    gap:8px;
+    justify-content: center;
+    align-items: center;
+}
+
+ .checkbox-wrapper-22 .switch {
+     display: inline-block;
+     height: 34px;
+     position: relative;
+     width: 60px;
+ }
+
+.checkbox-wrapper-22 .switch input {
+    display:none;
+}
+
+.checkbox-wrapper-22 .slider {
+    background-color: var(--lighter-background);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.checkbox-wrapper-22 .slider:before {
+    background-color: #ccc;
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+}
+
+.checkbox-wrapper-22 input:checked + .slider {
+    background-color: var(--blue);
+}
+
+.checkbox-wrapper-22 input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.checkbox-wrapper-22 .slider.round {
+    border-radius: 34px;
+}
+
+.checkbox-wrapper-22 .slider.round:before {
+    border-radius: 50%;
 }

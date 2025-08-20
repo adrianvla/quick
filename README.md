@@ -39,6 +39,8 @@ CC Attribution License
 https://www.svgrepo.com/svg/521942/add-ellipse
 Changes were made.
 
+https://github.com/mymth/vanillajs-datepicker
+MIT
 
 JQuery.js
 Copyright OpenJS Foundation and other contributors, https://openjsf.org/

@@ -3,7 +3,7 @@ import {showScreen} from "./showScreen.js";
 import {showModal} from "../misc/modal.js";
 import {getToDoTasks, setToDoTasks} from "../storage/storage.js";
 import {randomID} from "../misc/utils.js";
-const DAY = 60 * 60 * 24 * 1000;
+export const DAY = 60 * 60 * 24 * 1000;
 export const calculateBlocking = (todolist) => {
     todolist.forEach(category => {
         category.tasks.forEach(task => {
@@ -47,7 +47,7 @@ export const showCategories = () => {
                 });
             });
 
-            let res = await showModal("Create new Task","A task is a single item that needs to be completed.","Create",["Task Name","Description","Length in Days",{name:"Requirements", autocomplete:blockingOptions}]);
+            let res = await showModal("Create new Task","A task is a single item that needs to be completed.","Create",["Task Name","Description",{name:"Due Date", type:"date"},"Length in Days",{name:"Requirements", autocomplete:blockingOptions}]);
             let taskName = res["Task Name"].trim();
             let requirements = res["Requirements"].split(",").filter(s => s.trim() !== "");
             requirements.forEach(req => {
@@ -68,6 +68,7 @@ export const showCategories = () => {
                 name: taskName,
                 description: res["Description"].trim(),
                 id: randomID(),
+                dueDate: res["Due Date"] || "",
                 requirements,
                 blocking : [],
                 length: parseFloat(res["Length in Days"])*DAY || 0,
@@ -111,11 +112,13 @@ export const showCategories = () => {
                     "Save",
                     [
                         { name: "Task Name", value: task.name },
-                        { name: "Description", value: task.description },
-                        { name: "Length in Days", value: (task.length / DAY).toString() },
+                        { name: "Description", value: task.description || '' },
+                        { name: "Due Date", value: task.dueDate || '', type: "date" },
+                        { name: "Length in Days", value: (task.length / DAY).toString(), type: "timelength" },
                         { name: "Requirements", autocomplete: blockingOptions, value: task.requirements.join(",") }
                     ]
                 );
+                console.log(res);
                 let newName = res["Task Name"].trim();
                 let newDescription = res["Description"].trim();
                 let newLength = parseFloat(res["Length in Days"]) * DAY || 0;

@@ -116,6 +116,35 @@ function autocomplete(inp, arr) {
         closeAllLists(e.target);
     });
 }
+function getCurrentTime() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+}
+function formatEpoch(epoch) {
+    const date = new Date(epoch);
+
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return [`${day}/${month}/${year}`, `${hours}:${minutes}:${seconds}`];
+}
+function toEpoch(dateStr, timeStr) {
+    const [day, month, year] = dateStr.split('/').map(Number);
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+
+    // JavaScript Date months are 0-based, so subtract 1 from month
+    const date = new Date(year, month - 1, day, hours, minutes, seconds);
+
+    return date.getTime(); // returns epoch in milliseconds
+}
 export const showModal = (title="Modal", description="Description", btnName="Ok", questionSet=[])=>{
     return new Promise((resolve, reject) => {
         let tl = gsap.timeline();
@@ -135,10 +164,10 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
                 pointerEvents:"all"
             },"<");
 
+        $(".modal-c .up").html("<h1></h1><p></p>");
         $(".modal-c h1").text(title);
         $(".modal-c p").text(description);
         $(".modal-c .buttons").html(`<button class="btn primary">${btnName}</button>`);
-        $(".modal-c .up input, .modal-c .up .input-label, .modal-c .up select").remove();
         const closeModal = () => {
             tl = gsap.timeline();
 
@@ -179,7 +208,12 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
                 let input = $(`<span class="input-label">${question.name}</span><input type="text" class="question-input-${toClassName(question.name)}" value="${question.value || ""}">`);
                 $(".modal-c .up").append(input);
                 autocomplete(document.querySelector(`.question-input-${toClassName(question.name)}`), question.autocomplete);
-            }else if(question.value){
+            }else if(question.type === "date"){
+                const dateF = formatEpoch(question.value || Date.now());
+                let input = $(`<span class="input-label">${question.name}</span><div class="display:flex;gap:8px"><input type="text" class="question-input-${toClassName(question.name)}" value="${dateF[0] || ""}" style="flex:1;margin-right:5px;"><span> at </span><input type="time" class="question-input-${toClassName(question.name)}2" value="${dateF[1] || ""}" style="flex:1;margin-left:5px;" placeholder="${getCurrentTime()}" step="1"></div>`);
+                $(".modal-c .up").append(input);
+                const datepicker = new window.Datepicker(input.find(`.question-input-${toClassName(question.name)}`)[0], {format: "dd/mm/yyyy"});
+            }else if(question.value !== undefined){
                 let input = $(`<span class="input-label">${question.name}</span><input type="text" class="question-input-${toClassName(question.name)}" value="${question.value}">`);
                 $(".modal-c .up").append(input);
             }
@@ -193,7 +227,9 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
                     assembler[question] = $(`.modal-c .up .question-input-${toClassName(question)}`).val();
                 }else if(question.options || question.autocomplete){
                     assembler[question.name] = $(`.modal-c .up .question-input-${toClassName(question.name)}`).val();
-                }else if(question.value){
+                }else if(question.type === "date"){
+                    assembler[question.name] = toEpoch($(`.modal-c .up .question-input-${toClassName(question.name)}`).val(),$(`.modal-c .up .question-input-${toClassName(question.name)}2`).val());
+                }else if(question.value !== undefined){
                     assembler[question.name] = $(`.modal-c .up .question-input-${toClassName(question.name)}`).val();
                 }
             });
