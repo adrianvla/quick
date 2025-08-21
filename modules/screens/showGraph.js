@@ -109,7 +109,14 @@ export const showGraph = () => {
 
     // Compute PERT metrics per task
     const pertById = calculatePERT(todolist);
-    const scheduleById = calculatePERTSchedule(todolist);
+    // Use a persistent baseline so dates don't drift each render
+    const baselineKey = 'pertBaselineTs';
+    let baselineNow = Number(localStorage.getItem(baselineKey));
+    if (!baselineNow || !Number.isFinite(baselineNow)) {
+        baselineNow = Date.now();
+        localStorage.setItem(baselineKey, String(baselineNow));
+    }
+    const scheduleById = calculatePERTSchedule(todolist, { now: baselineNow });
 
     // Build edges: req -> task (i.e., dependency -> dependent)
     const edges = {};

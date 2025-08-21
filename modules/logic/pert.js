@@ -7,14 +7,18 @@ export const calculatePERT = (todolist, opts = {}) => {
 	const DAY = 24 * 60 * 60 * 1000;
 	const aFactor = typeof opts.aFactor === 'number' ? opts.aFactor : 0.75; // a = m * aFactor
 	const bFactor = typeof opts.bFactor === 'number' ? opts.bFactor : 1.25; // b = m * bFactor
+	const defaultMDays = typeof opts.defaultMDays === 'number' ? Math.max(0.25, opts.defaultMDays) : 1; // sensible fallback for tasks with no length
+	const minSpanDays = typeof opts.minSpanDays === 'number' ? Math.max(0, opts.minSpanDays) : 0.25; // ensure b >= a by at least this
 
 	// Build task list and return a map by task.id
 	const result = {};
 	todolist.forEach(category => {
 		category.tasks.forEach(task => {
-			const mDays = Math.max(0, (task.length || 0) / DAY);
-			const aDays = Math.max(0, (task.optimisticDays ?? (mDays * aFactor)));
-			const bDays = Math.max(aDays, (task.pessimisticDays ?? (mDays * bFactor)));
+			const mRaw = (task.length || 0) / DAY;
+			const mDays = mRaw > 0 ? mRaw : defaultMDays;
+			let aDays = Math.max(0, (task.optimisticDays ?? (mDays * aFactor)));
+			let bDays = Math.max(aDays, (task.pessimisticDays ?? (mDays * bFactor)));
+			if (bDays - aDays < minSpanDays) bDays = aDays + minSpanDays;
 			const teDays = (aDays + 4 * mDays + bDays) / 6;
 			const sdDays = Math.abs(bDays - aDays) / 6;
 			result[task.id] = {
@@ -35,7 +39,7 @@ export const calculatePERT = (todolist, opts = {}) => {
 // Returns map taskId -> { minDays, maxDays, minDate, maxDate }
 export const calculatePERTSchedule = (todolist, opts = {}) => {
 	const DAY = 24 * 60 * 60 * 1000;
-	const now = Date.now();
+	const now = (opts && typeof opts.now === 'number') ? opts.now : Date.now();
 	const pert = calculatePERT(todolist, opts);
 
 	// Build mapping and graph (using task names in requirements)
@@ -74,24 +78,48 @@ export const calculatePERTSchedule = (todolist, opts = {}) => {
 	// Fallback in case of cycles
 	if (topo.length < tasks.length) tasks.forEach(t => { if (!topo.includes(t.id)) topo.push(t.id); });
 
-	const minDays = {}; const maxDays = {};
+	// Forward pass computing both earliest start/finish (optimistic) and
+	// pessimistic start/finish using a/b durations. Naming:
+	//   minStartDays/minFinishDays use 'a' durations
+	//   maxStartDays/maxFinishDays use 'b' durations
+	const minStartDays = {}; const minFinishDays = {};
+	const maxStartDays = {}; const maxFinishDays = {};
+
 	topo.forEach(id => {
 		const p = pert[id] || { a: 0, b: 0 };
-		const bestPredMin = preds[id].length ? Math.max(...preds[id].map(pid => minDays[pid] || 0)) : 0;
-		const bestPredMax = preds[id].length ? Math.max(...preds[id].map(pid => maxDays[pid] || 0)) : 0;
-		minDays[id] = bestPredMin + (p.a || 0);
-		maxDays[id] = bestPredMax + (p.b || 0);
+		// Earliest start is the max of predecessors' earliest finishes (a-based)
+		const es = preds[id].length ? Math.max(...preds[id].map(pid => minFinishDays[pid] || 0)) : 0;
+		const ef = es + (p.a || 0);
+		minStartDays[id] = es;
+		minFinishDays[id] = ef;
+		// Pessimistic window propagated similarly with b durations
+		const ls = preds[id].length ? Math.max(...preds[id].map(pid => maxFinishDays[pid] || 0)) : 0;
+		const lf = ls + (p.b || 0);
+		maxStartDays[id] = ls;
+		maxFinishDays[id] = lf;
 	});
 
 	const out = {};
 	tasks.forEach(t => {
-		const minD = minDays[t.id] || 0;
-		const maxD = maxDays[t.id] || minD;
+		const minStartD = minStartDays[t.id] ?? 0;
+		const minFinishD = minFinishDays[t.id] ?? minStartD;
+		const maxStartD = maxStartDays[t.id] ?? minStartD;
+		const maxFinishD = maxFinishDays[t.id] ?? minFinishD;
 		out[t.id] = {
-			minDays: minD,
-			maxDays: maxD,
-			minDate: new Date(now + minD * DAY).toISOString(),
-			maxDate: new Date(now + maxD * DAY).toISOString()
+			// Back-compat (previously these represented earliest finish/latest finish)
+			minDays: minFinishD,
+			maxDays: maxFinishD,
+			minDate: new Date(now + minFinishD * DAY).toISOString(),
+			maxDate: new Date(now + maxFinishD * DAY).toISOString(),
+			// New explicit fields
+			minStartDays: minStartD,
+			minFinishDays: minFinishD,
+			maxStartDays: maxStartD,
+			maxFinishDays: maxFinishD,
+			minStartDate: new Date(now + minStartD * DAY).toISOString(),
+			minFinishDate: new Date(now + minFinishD * DAY).toISOString(),
+			maxStartDate: new Date(now + maxStartD * DAY).toISOString(),
+			maxFinishDate: new Date(now + maxFinishD * DAY).toISOString()
 		};
 	});
 	return out;

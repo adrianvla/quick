@@ -228,6 +228,7 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
                 }else if(question.options || question.autocomplete){
                     assembler[question.name] = $(`.modal-c .up .question-input-${toClassName(question.name)}`).val();
                 }else if(question.type === "date"){
+                    console.log($(`.modal-c .up .question-input-${toClassName(question.name)}`).val())
                     assembler[question.name] = toEpoch($(`.modal-c .up .question-input-${toClassName(question.name)}`).val(),$(`.modal-c .up .question-input-${toClassName(question.name)}2`).val());
                 }else if(question.value !== undefined){
                     assembler[question.name] = $(`.modal-c .up .question-input-${toClassName(question.name)}`).val();

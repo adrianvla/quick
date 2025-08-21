@@ -544,13 +544,13 @@ input[type="text"]:focus, select:focus, .input:focus, input[type="time"]:focus{
     stroke: var(--green) !important;
 }
 
-.drawflow span.small-pill{
+span.small-pill{
     padding: 2px 5px 2px 15px;
     border-radius: 1000px;
     font-size: 0.5em;
     position:relative;
 }
-.drawflow span.small-pill::after{
+span.small-pill::after{
     content:"";
     position:absolute;
     top:50%;

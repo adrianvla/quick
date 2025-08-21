@@ -146,6 +146,7 @@ export const showCategories = () => {
                 task.description = newDescription;
                 task.length = newLength;
                 task.requirements = newRequirements;
+                task.dueDate = res["Due Date"] ? res["Due Date"] : task.dueDate;
                 // Recalculate blocking
                 todolist.forEach(c => c.tasks.forEach(t => t.blocking = []));
                 todolist.forEach(c => {
