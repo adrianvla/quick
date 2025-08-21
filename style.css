@@ -336,6 +336,7 @@ body.dark .pill{
     justify-content: space-between;
     box-sizing: border-box;
     backdrop-filter: blur(10px);
+    max-width:800px;
 }
 
 .modal h1{
