@@ -1,7 +1,11 @@
-# Personal PWA Template
-
-
-
+# Quick!
+Plan by the minute: a planner app for your daily tasks, assignments, deadlines and gargantuan projects.
+![Screenshot 2025-08-21 at 18.44.10.png](img/Screenshot%202025-08-21%20at%2018.44.10.png)
+![Screenshot 2025-08-21 at 18.42.48.png](img/Screenshot%202025-08-21%20at%2018.42.48.png)
+![Screenshot 2025-08-21 at 18.44.36.png](img/Screenshot%202025-08-21%20at%2018.44.36.png)
+![Screenshot 2025-08-21 at 18.45.14.png](img/Screenshot%202025-08-21%20at%2018.45.14.png)
+![Screenshot 2025-08-21 at 18.45.55.png](img/Screenshot%202025-08-21%20at%2018.45.55.png)
+![Screenshot 2025-08-21 at 18.46.06.png](img/Screenshot%202025-08-21%20at%2018.46.06.png)
 
 ### Licenses
 ```
