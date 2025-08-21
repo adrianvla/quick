@@ -112,7 +112,7 @@ async function ensureConfig() {
 	try {
 		const input = await showModal(
 			'Connect to Firestore',
-			'Enter Firebase config JSON for your decks-db project. This will only create/read the "todo" collection and won\'t touch existing data.<br>If you already have a database that you created for the Morisinc platform, you can use it here.<br><br>To create a new one please visit https://decks.morisinc.net/help',
+			'Enter Firebase config JSON for your decks-db project. This will only create/read the "todo" collection and won\'t touch existing data.\nIf you already have a database that you created for the Morisinc platform, you can use it here.\n\nTo create a new one please visit https://decks.morisinc.net/help',
 			'Save',
 			['Firebase Config (JSON)']
 		);
