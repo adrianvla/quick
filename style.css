@@ -244,6 +244,8 @@ body.dark .pill{
     font-weight: bold;
     width:fit-content;
     position:relative;
+    pointer-events: none;
+    user-select: none;
 }
 .category .cat-title::after{
     content:"";
@@ -347,6 +349,10 @@ body.dark .pill{
 .modal button.primary{
     background:var(--dark-blue);
 }
+.modal .buttons{
+    display:flex;
+    gap:16px;
+}
 
 input[type="text"], .input, select, input[type="time"]{
     background:var(--lighter-background);
@@ -393,7 +399,7 @@ input[type="text"]:focus, select:focus, .input:focus, input[type="time"]:focus{
     background-color: var(--dark-blue) !important;
 }
 
-.entry .btn{
+.category .btn{
     width:20px;
     height:20px;
     padding:0;
@@ -411,14 +417,14 @@ input[type="text"]:focus, select:focus, .input:focus, input[type="time"]:focus{
     cursor:pointer;
     transition: opacity 0.1s;
 }
-.entry .btn svg{
+.category .btn svg{
     width:100%;
     height:100%;
 }
-.entry .edit-task{
+.category .edit-task{
     right:40px;
 }
-.entry .edit-task svg{
+.category .edit-task svg, .cat-title-c .edit-cat svg{
     transform:scale(0.7);
 }
 
@@ -969,4 +975,24 @@ span.small-pill::after{
 
 .checkbox-wrapper-22 .slider.round:before {
     border-radius: 50%;
+}
+
+.cat-title-c{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cat-title-c .btn{
+    position:relative;
+    top:unset;
+    right:unset;
+}
+.cat-title-c .btns{
+    display:flex;
+    gap:4px;
+    margin-left:8px;
+}
+.select-project{
+    display:flex;
+    gap:16px;
 }

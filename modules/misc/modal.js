@@ -167,7 +167,7 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
         $(".modal-c .up").html("<h1></h1><p></p>");
         $(".modal-c h1").text(title);
         $(".modal-c p").text(description);
-        $(".modal-c .buttons").html(`<button class="btn primary">${btnName}</button>`);
+        $(".modal-c .buttons").html(`<button class="btn primary yes">${btnName}</button><button class="btn cancel">Cancel</button>`);
         const closeModal = () => {
             tl = gsap.timeline();
 
@@ -218,7 +218,7 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
                 $(".modal-c .up").append(input);
             }
         });
-        $(".modal-c .buttons .btn").on("click", () => {
+        $(".modal-c .buttons .btn.yes").on("click", () => {
             closeModal();
             let assembler = {};
 
@@ -236,6 +236,10 @@ export const showModal = (title="Modal", description="Description", btnName="Ok"
             });
 
             resolve(assembler);
+        });
+        $(".modal-c .buttons .btn.cancel").on("click",()=>{
+            closeModal();
+            reject();
         });
 
     });
