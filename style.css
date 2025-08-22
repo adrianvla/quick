@@ -215,6 +215,7 @@ body.dark .pill{
     border-radius:15px;
     height:fit-content;
     width:max-content;
+    max-width:200px;
 }
 .category .entry{
     background:var(--color);
@@ -225,12 +226,11 @@ body.dark .pill{
     gap:10px;
     position:relative;
     overflow:hidden;
-    width:max-content;
     min-width:100%;
     box-sizing: border-box;
 }
 .category .entry h1{
-    font-size:1.5em;
+    font-size:1em;
     margin:0;
 }
 .category .entry p{
